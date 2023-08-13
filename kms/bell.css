@@ -1,0 +1,77 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+.center {
+  text-align:center;
+}
+
+.timelineWrapper {
+  float:left;
+  width: 200px;
+  margin: 50px;
+}
+
+.timeline {
+  position: relative;
+  border-left: 2px solid #333;
+  padding-left: 20px;
+}
+
+.event {
+  position: relative;
+  margin-bottom: 0px;
+}
+
+.time {
+  font-weight: bold;
+  margin-bottom: 3px;
+  font-size:.8em;
+}
+
+.description {
+  font-size:.8em;
+}
+
+.indicator {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+  left: -6px;
+  top: 0;
+}
+
+.bar {
+  width: 100%;
+  height: 1px;
+  background-color: #333;
+  margin: 0;
+}
+
+.passing {
+	margin-bottom: 0px;
+	background-color:#DDD;
+}
+
+#warning {
+	font-weight:bold;
+	color:#f66;
+	display:none;
+}
+
+.inline {
+	display: inline-block;
+}
+
+.block-sched-wrapper {
+	width:900px;
+	margin: 0px auto;
+}
+
+.all-sched-wrapper {
+	width:600px;
+	margin: 0px auto;
+	
+}

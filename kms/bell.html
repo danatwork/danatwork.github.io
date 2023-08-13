@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="./moment.js"></script>
+  <link rel="stylesheet" href="bell.css">
+  <script src="./bell.js"></script>
+  <title>Bell Schedule Helper</title>
+</head>
+<body>
+  <header>
+    <h1 class="center">Bell Schedule Helper</h1>
+  </header>
+  <main>
+    <section>
+	  <div id="scheduleWrapper" class="">
+		<div id="inputs" class="center" style="margin-bottom:20px;">
+			<input type="date" id="dateInput" name="date">
+			<input type="time" id="timeInput" name="time"> 
+			<div id="warning" class="center">Using custom date/time <button id="reset">↺ Revert to Now</button></div>
+		</div>
+	    <div id="summary" class="center"></div>
+		
+		<div id="c" class="triangle"></div>
+		<div id="blockPeriods" style="display:none">
+		  <div class="timelineWrapper">
+		  <h2 class="center" id="timelineAhead">6th Grade</h2>
+		  <div id="timelineA" class="timeline">
+			<div id="indicatorA" class="indicator"></div>
+		  </div>
+		  </div>
+		  <div class="timelineWrapper">
+		  <h2 class="center" id="timelineBhead">7th Grade</h2>
+		  <div id="timelineB" class="timeline">
+			<div id="indicatorB" class="indicator"></div>
+		  </div>
+		  </div>
+		  <div class="timelineWrapper">
+		  <h2 class="center" id="timelineChead">8th Grade</h2>
+		  <div id="timelineC" class="timeline">
+			<div id="indicatorC" class="indicator"></div>
+		  </div>
+		  </div>
+		</div>
+		
+		<div id="allPeriods" style="display:none">
+		  <div class="timelineWrapper">
+		  <h2 class="center" id="timelineDhead">6th&amp;7th Grade</h2>
+		  <div id="timelineD" class="timeline">
+			<div id="indicatorD" class="indicator"></div>
+		  </div>
+		  </div>
+		  <div class="timelineWrapper">
+		  <h2 class="center" id="timelineEhead">8th Grade</h2>
+		  <div id="timelineE" class="timeline">
+			<div id="indicatorE" class="indicator"></div>
+		  </div>
+		  </div>
+		</div>
+	  </div>
+    </section>
+  </main>
+ 
+<script src="./timeline.js"></script>
+<script>
+// This should use the current date and time.
+let givenDate = moment().format("MM/DD/YYYY");
+let givenTime = moment(moment().format("HH:mm"),'HH:mm');
+
+// For Testing
+//var givenDate = '09/07/2023'; // TEST DATE
+//var givenTime = moment('08:05', 'HH:mm'); // HR
+//var givenTime = moment('08:30', 'HH:mm'); // Block 1
+//var givenTime = moment('09:50', 'HH:mm'); // Recess
+//var givenTime = moment('10:00', 'HH:mm'); // Block 2
+//var givenTime = moment('12:00', 'HH:mm'); // Lunch/STAR
+//var givenTime = moment('12:30', 'HH:mm'); // Lunch/Star
+//var givenTime = moment('13:00', 'HH:mm'); // Block 3
+//var givenTime = moment('14:30', 'HH:mm'); // Teacher Meeting
+
+
+document.getElementById('dateInput').value = moment(givenDate,"MM/DD/YYYY").format("YYYY-MM-DD");
+document.getElementById('timeInput').value = moment(givenTime,'HH:mm').format('HH:mm');
+
+function Init()
+{
+	// Find the day in the calendar
+	var foundDate = calendar.find(item => item.date == givenDate);
+	console.log("Given Date: " +givenDate);
+	console.log("Quarter: " +foundDate.q);
+	console.log("Schedule Type: " +foundDate.type);
+	console.log("Start Period: " +foundDate.start);
+
+	if(foundDate.type == 'block') {
+	
+		// Set up the timeline headers based on quarter
+		if(foundDate.q == 1)
+		{
+			document.querySelector('#timelineAhead').innerHTML = "6th Grade";
+			document.querySelector('#timelineBhead').innerHTML = "7th Grade";
+			document.querySelector('#timelineChead').innerHTML = "8th Grade";
+		} else if(foundDate.q == 2)
+		{
+			document.querySelector('#timelineAhead').innerHTML = "8th Grade";
+			document.querySelector('#timelineBhead').innerHTML = "6th Grade";
+			document.querySelector('#timelineChead').innerHTML = "7th Grade";
+		} else if(foundDate.q == 3)
+		{
+			document.querySelector('#timelineAhead').innerHTML = "7th Grade";
+			document.querySelector('#timelineBhead').innerHTML = "8th Grade";
+			document.querySelector('#timelineChead').innerHTML = "6th Grade";
+		} else if(foundDate.q == 4)
+		{
+			document.querySelector('#timelineAhead').innerHTML = "6th Grade";
+			document.querySelector('#timelineBhead').innerHTML = "7th Grade";
+			document.querySelector('#timelineChead').innerHTML = "8th Grade";
+		}
+
+		// Show the timeline
+		document.querySelector('#blockPeriods').style.display = 'block';
+		document.querySelector('#scheduleWrapper').classList.add('block-sched-wrapper');
+		
+		initializeTimeline(document.querySelector('#timelineA'),blockPeriodsA);
+		initializeTimeline(document.querySelector('#timelineB'),blockPeriodsB);
+		initializeTimeline(document.querySelector('#timelineC'),blockPeriodsC);
+	} else if (foundDate.type == 'all') {
+		if(foundDate.q == 1)
+		{
+			document.querySelector('#timelineDhead').innerHTML = "6th&7th Grade";
+			document.querySelector('#timelineEhead').innerHTML = "8th Grade";
+		} else if(foundDate.q == 2)
+		{
+			document.querySelector('#timelineDhead').innerHTML = "8th Grade";
+			document.querySelector('#timelineEhead').innerHTML = "6th&7th Grade";
+		} else if(foundDate.q == 3)
+		{
+			document.querySelector('#timelineDhead').innerHTML = "6th&7th Grade";
+			document.querySelector('#timelineEhead').innerHTML = "8th Grade";
+		} else if(foundDate.q == 4)
+		{
+			document.querySelector('#timelineDhead').innerHTML = "8th Grade";
+			document.querySelector('#timelineEhead').innerHTML = "6th&7th Grade";
+		}	
+
+		// Show the timeline
+		document.querySelector('#allPeriods').style.display = 'block';
+		document.querySelector('#scheduleWrapper').classList.add('all-sched-wrapper');	
+		
+		initializeTimeline(document.querySelector('#timelineD'),allPeriodsA);
+		initializeTimeline(document.querySelector('#timelineE'),allPeriodsB);
+	} else if (foundDate.type == 'modified') {
+		document.getElementById('warning').innerHTML = "Refer to Modified Schedule";
+		document.getElementById('warning').style.display = 'block';
+		
+		document.getElementById('blockPeriods').style.display = 'none';
+		document.getElementById('allPeriods').style.display = 'none';
+		document.getElementById('summary').style.display = 'none';
+		
+	}
+	
+}
+
+// Allow user to pick date and time, then re-initialize the page
+const dateInput = document.getElementById('dateInput');
+const timeInput = document.getElementById('timeInput');
+const resetInput = document.getElementById('reset');
+
+dateInput.addEventListener('change', function() {
+  givenDate = moment(dateInput.value,'YYYY-MM-DD').format("MM/DD/YYYY");
+  Init();
+});
+timeInput.addEventListener('change', function() {
+  givenTime = moment(timeInput.value.slice(0,5), 'HH:mm');
+  Init();
+});
+
+resetInput.addEventListener('click', function() {
+  location.reload();
+});
+
+// STARTUP
+Init();
+</script>
+
+</body>
+</html>
