@@ -89,6 +89,9 @@ function updateIndicatorPosition() {
 	// -----------------------------------------------
 	var foundDate = calendar.find(item => item.date == givenDate);
 	
+	if (givenTime < moment("8:00","HH:mm") || givenTime > moment("15:00","HH:mm"))
+		return;
+	
 	if(foundDate.type == 'block')
 	{
 		// Find the period in each timeline
