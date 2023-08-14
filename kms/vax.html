@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Vaccination Checklist</title>
+	<style>
+	.pass:after { content:"✓"; color:green; }
+	.fail:after { content:"X"; color:red; }
+	input {max-width:120px;height:2em;line-height:1.5em;}
+	table tr:nth-child(even) {
+		background-color: rgb(255, 255, 200);
+	}
+	.center {text-align:center;}
+	.bold {font-weight:bold;}
+	</style>
+</head>
+<body>
+<div style="width:90%;margin:30px auto;">
+	
+	<div style="width:25%;display:inline-block;">
+	<strong>DOB:</strong> <input id="DOB" type="text" placeholder="MM/DD/YY" value="" /> <button onclick="location.reload();">Reset</button>
+	</div>
+	
+	<div style="width:70%;display:inline-block;margin-bottom:20px;">
+	<strong>Date Math Helper:</strong>
+	<input id="dateCompare1" type="text" placeholder="MM/DD/YY" value="" /> to <input id="dateCompare2" type="text" placeholder="MM/DD/YY" value="" />
+	<label id="dateMathOutput"></label>
+	</div>
+	
+	<div>
+		<label id="warnings"></label>
+	</div>
+	
+	<table border="1" cellpadding="10px" cellspacing="1px" width="100%">
+	<tr>
+		<th>Vaccine</th>
+		<th width="50">First Dose</th>
+		<th width="50">Second Dose</th>
+		<th width="50">Third Dose</th>
+		<th width="50">Fourth Dose</th>
+		<th width="50">Fifth Dose</th>
+		<th width="50">Pass/Fail</th>
+		<th>Notes</th>
+	</tr>
+	
+	<tr>
+		<td colspan="8" class="center bold">All 7th Graders</td>
+	</tr>
+	
+	<tr>
+		<th>HPV (Human Papillomavirus Vaccine)</th>
+		<td><input id="HPV1" type="text" placeholder="HPV 1st Dose" /></td>
+		<td><input id="HPV2" type="text" placeholder="HPV 2nd Dose" /></td>
+		<td><input id="HPV3" type="text" placeholder="HPV 3rd Dose" /></td>
+		<td></td>
+		<td></td>
+		<td class="center bold"><label id="HPV-passfail"></label></td>
+		<td><label id="HPV-notes"></label></td>
+	</tr>
+	<tr>
+		<th>MCV (Meningococcal Conjugate Vaccine)</th>
+		<td><input id="MCV1" type="text" placeholder="MCV 1st Dose" /></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td class="center bold"><label id="MCV-passfail"></label></td>
+		<td><label id="MCV-notes"></label></td>
+	</tr>
+	<tr>
+		<th>Tdap (Tetanus, Diptheria, Pertussis)</th>
+		<td><input id="Tdap1" type="text" placeholder="Tdap 1st Dose" /></td>
+		<td><input id="Tdap2" type="text" placeholder="Tdap 2nd Dose" /></td>
+		<td><input id="Tdap3" type="text" placeholder="Tdap 3rd Dose" /></td>
+		<td></td>
+		<td></td>
+		<td class="center bold"><label id="Tdap-passfail"></label></td>
+		<td><label id="Tdap-notes"></label></td>
+	</tr>
+	
+	<tr>
+		<td colspan="8" class="center bold">New Enterers</td>
+	</tr>
+	
+	
+	<tr>
+		<th>DTaP (Diptheria, Tetanus, Pertussis) [DTP]</th>
+		<td><input id="DTaP1" type="text" placeholder="DTaP 1st Dose" /></td>
+		<td><input id="DTaP2" type="text" placeholder="DTaP 2nd Dose" /></td>
+		<td><input id="DTaP3" type="text" placeholder="DTaP 3rd Dose" /></td>
+		<td><input id="DTaP4" type="text" placeholder="DTaP 4th Dose" /></td>
+		<td><input id="DTaP5" type="text" placeholder="DTaP 5th Dose" /></td>
+		<td class="center bold"><label id="DTaP-passfail"></label></td>
+		<td><label id="DTaP-notes"></label></td>
+	</tr>
+	<tr>
+		<th>Polio / IPV</th>
+		<td><input id="Polio1" type="text" placeholder="Polio 1st Dose" /></td>
+		<td><input id="Polio2" type="text" placeholder="Polio 2nd Dose" /></td>
+		<td><input id="Polio3" type="text" placeholder="Polio 3rd Dose" /></td>
+		<td><input id="Polio4" type="text" placeholder="Polio 4th Dose" /></td>
+		<td></td>
+		<td class="center bold"><label id="Polio-passfail"></label></td>
+		<td><label id="Polio-notes"></label></td>
+	</tr>
+	<tr>
+		<th>Hep B</th>
+		<td><input id="HepB1" type="text" placeholder="HepB 1st Dose" /></td>
+		<td><input id="HepB2" type="text" placeholder="HepB 2nd Dose" /></td>
+		<td><input id="HepB3" type="text" placeholder="HepB 3rd Dose" /></td>
+		<td></td>
+		<td></td>
+		<td class="center bold"><label id="HepB-passfail"></label></td>
+		<td><label id="HepB-notes"></label></td>
+	</tr>
+	<tr>
+		<th>Hep A</th>
+		<td><input id="HepA1" type="text" placeholder="HepA 1st Dose" /></td>
+		<td><input id="HepA2" type="text" placeholder="HepA 2nd Dose" /></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td class="center bold"><label id="HepA-passfail"></label></td>
+		<td><label id="HepA-notes"></label></td>
+	</tr>
+	<tr>
+		<th>MMR (Measles, Mumps, Rubella)</th>
+		<td><input id="MMR1" type="text" placeholder="MMR 1st Dose" /></td>
+		<td><input id="MMR2" type="text" placeholder="MMR 2nd Dose" /></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td class="center bold"><label id="MMR-passfail"></label></td>
+		<td><label id="MMR-notes"></label></td>
+	</tr>
+	<tr>
+		<th>Varicella (Chickenpox)</th>
+		<td><input id="Varicella1" type="text" placeholder="Varicella 1st Dose" /></td>
+		<td><input id="Varicella2" type="text" placeholder="Varicella 2nd Dose" /></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td class="center bold"><label id="Varicella-passfail"></label></td>
+		<td><label id="Varicella-notes"></label></td>
+	</tr>
+	
+	<tr>
+		<td colspan="8" class="center bold">Combined Vaccines</td>
+	</tr>
+	
+	<tr>
+		<th>Hep A-Hep B (Twinrix)</th>
+		<td><input id="Twinrix1" type="text" placeholder="Twinrix 1st Dose" /></td>
+		<td><input id="Twinrix2" type="text" placeholder="Twinrix 2nd Dose" /></td>
+		<td><input id="Twinrix3" type="text" placeholder="Twinrix 3rd Dose" /></td>
+		<td></td>
+		<td></td>
+		<td class="center bold"><label id="Twinrix-passfail"></label></td>
+		<td><label id="Twinrix-notes"></label></td>
+	</tr>
+	<tr>
+		<th>DTaP-HepB-IPV (Pediarix)</th>
+		<td><input id="Pediarix1" type="text" placeholder="Pediarix 1st Dose" /></td>
+		<td><input id="Pediarix2" type="text" placeholder="Pediarix 2nd Dose" /></td>
+		<td><input id="Pediarix3" type="text" placeholder="Pediarix 3rd Dose" /></td>
+		<td></td>
+		<td></td>
+		<td class="center bold"><label id="Pediarix-passfail"></label></td>
+		<td><label id="Pediarix-notes"></label></td>
+	</tr>
+	<tr>
+		<th>MMRV (ProQuad)</th>
+		<td><input id="ProQuad1" type="text" placeholder="ProQuad 1st Dose" /></td>
+		<td><input id="ProQuad2" type="text" placeholder="ProQuad 2nd Dose" /></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td class="center bold"><label id="ProQuad-passfail"></label></td>
+		<td><label id="ProQuad-notes"></label></td>
+	</tr>
+	<tr>
+		<th>DTaP-IPV (Kinrix)</th>
+		<td><input id="Kinrix1" type="text" placeholder="Kinrix 1st Dose" /></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td class="center bold"><label id="Kinrix-passfail"></label></td>
+		<td><label id="Kinrix-notes"></label></td>
+	</tr>
+	<tr>
+		<th>DTaP-IPV/Hib (Pentacel)</th>
+		<td><input id="Pentacel1" type="text" placeholder="Pentacel 1st Dose" /></td>
+		<td><input id="Pentacel2" type="text" placeholder="Pentacel 2nd Dose" /></td>
+		<td><input id="Pentacel3" type="text" placeholder="Pentacel 3rd Dose" /></td>
+		<td><input id="Pentacel4" type="text" placeholder="Pentacel 4th Dose" /></td>
+		<td></td>
+		<td class="center bold"><label id="Pentacel-passfail"></label></td>
+		<td><label id="Pentacel-notes"></label></td>
+	</tr>
+	<tr>
+		<th>Hib-MenCY (MenHibrix)</th>
+		<td><input id="MenHibrix1" type="text" placeholder="MenHibrix 1st Dose" /></td>
+		<td><input id="MenHibrix2" type="text" placeholder="MenHibrix 2nd Dose" /></td>
+		<td><input id="MenHibrix3" type="text" placeholder="MenHibrix 3rd Dose" /></td>
+		<td><input id="MenHibrix4" type="text" placeholder="MenHibrix 4th Dose" /></td>
+		<td></td>
+		<td class="center bold"><label id="MenHibrix-passfail"></label></td>
+		<td><label id="MenHibrix-notes"></label></td>
+	</tr>
+	<tr>
+		<th>DTaP-IPV (Quadracel)</th>
+		<td><input id="Quadracel1" type="text" placeholder="Quadracel 1st Dose" /></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td class="center bold"><label id="Quadracel-passfail"></label></td>
+		<td><label id="Quadracel-notes"></label></td>
+	</tr>
+	</table>  
+	
+		
+		
+	<script>
+	function $(id) {
+		return document.getElementById(id);
+	}
+	function parseDate(dateString) {
+		var parts = dateString.split("/");
+		var month = parseInt(parts[0], 10);
+		var day = parseInt(parts[1], 10);
+		//alert(parseInt(parts[2], 10));
+		var year = 2000
+		if(parseInt(parts[2], 10) < 100)
+			year = parseInt(parts[2], 10) + 2000; // Assuming years in the 21st century (00-99)
+		else
+			year = parseInt(parts[2]);
+	
+		return new Date(year, month - 1, day);
+	}
+	function weeksBetween(date1, date2) {
+		try
+		{
+			var oneWeekInMilliseconds = 7 * 24 * 60 * 60 * 1000; // Number of milliseconds in a week
+			var differenceInMilliseconds = date2.getTime() - date1.getTime();
+			var weeks = differenceInMilliseconds / oneWeekInMilliseconds;
+			return weeks;
+		} catch
+		{return 0;}
+	}
+	function addMonths(date, monthsToAdd) {
+		const newDate = new Date(date);
+		newDate.setMonth(newDate.getMonth() + monthsToAdd);
+		return newDate;
+	}
+
+
+	function Check()
+	{
+		var DOB = parseDate($('DOB').value);
+		
+		
+		//----------------------
+		// Kinrix (DTaP-IPV) Check before DTaP and Polio
+		//----------------------
+		var Kinrix1 = parseDate($('Kinrix1').value);
+		
+		var Kinrixpass = true;
+		
+		$('Kinrix-notes').innerHTML = "";
+		$('Kinrix-passfail').classList.remove("pass");
+		$('Kinrix-passfail').classList.remove("fail");
+		
+		// Kinrix1 Not before age 4
+		if(addMonths(DOB,48) <= Kinrix1) {
+			$('Kinrix-notes').innerHTML += "✓ 1st Dose is after age 4<br />";
+		}
+		else {
+			$('Kinrix-notes').innerHTML += "X 1st Dose is before age 4<br />";
+			Kinrixpass = false;
+		}
+		
+		if(Kinrixpass)
+			$('Kinrix-passfail').classList.add("pass");
+		else
+			$('Kinrix-passfail').classList.add("fail");
+			
+		//----------------------
+		// Quadracel (DTaP-IPV) Check before DTaP and Polio
+		//----------------------
+		var Quadracel1 = parseDate($('Quadracel1').value);
+		
+		var Quadracelpass = true;
+		
+		$('Quadracel-notes').innerHTML = "";
+		$('Quadracel-passfail').classList.remove("pass");
+		$('Quadracel-passfail').classList.remove("fail");
+		
+		// Quadracel1 Not before age 4
+		if(addMonths(DOB,48) <= Quadracel1) {
+			$('Quadracel-notes').innerHTML += "✓ 1st Dose is after age 4<br />";
+		}
+		else {
+			$('Quadracel-notes').innerHTML += "X 1st Dose is before age 4<br />";
+			Quadracelpass = false;
+		}
+		
+		if(Quadracelpass)
+			$('Quadracel-passfail').classList.add("pass");
+		else
+			$('Quadracel-passfail').classList.add("fail");
+		
+		
+		//----------------------
+		// HPV
+		//----------------------
+		var HPV1 = parseDate($('HPV1').value);
+		var HPV2 = parseDate($('HPV2').value);
+		var HPV3 = parseDate($('HPV3').value);
+		
+		var HPVpass = true;
+		
+		$('HPV-notes').innerHTML = "";
+		$('HPV-passfail').classList.remove("pass");
+		$('HPV-passfail').classList.remove("fail");
+		
+		// HPV1 Not before age 9
+		if(addMonths(DOB,108) <= HPV1 && addMonths(DOB,180) > HPV1) {
+			$('HPV-notes').innerHTML += "✓ 1st Dose is after age 9, before 15<br />";
+		}
+		else {
+			$('HPV-notes').innerHTML += "X 1st Dose is before age 9 or after 15<br />";
+			HPVpass = false;
+		}
+		
+		// HPV2 5 months after dose 1
+		if(addMonths(HPV1,5) <= HPV2) {
+			$('HPV-notes').innerHTML += "✓ 2nd Dose is after 5 mo. of first<br />";
+		}
+		else {
+			$('HPV-notes').innerHTML += "X 2nd Dose is before 5 mo. of first<br />";
+			HPVpass = false;
+		}
+		
+		//3 Dose
+		if(!HPVpass)
+		{
+			HPVpass = true;
+			if(addMonths(DOB,180) <= HPV1) {
+				$('HPV-notes').innerHTML += "✓ (3-dose) 1st Dose is after age 15<br />";
+			}
+			else {
+				$('HPV-notes').innerHTML += "X (3-dose) 1st Dose is before age 15<br />";
+				HPVpass = false;
+			}
+			if(weeksBetween(HPV1,HPV2) >= 4) {
+				$('HPV-notes').innerHTML += "✓ (3-dose) 2nd Dose is after 4 wk. of first<br />";
+			}
+			else {
+				$('HPV-notes').innerHTML += "X (3-dose) 2nd Dose is before 4 wk. of first<br />";
+				HPVpass = false;
+			}
+			if(weeksBetween(HPV2,HPV3) >= 12) {
+				$('HPV-notes').innerHTML += "✓ (3-dose) 3rd Dose is after 12 wk. of 2nd<br />";
+			}
+			else {
+				$('HPV-notes').innerHTML += "X (3-dose) 3rd Dose is before 12 wk. of 2nd<br />";
+				HPVpass = false;
+			}
+			if(addMonths(HPV1,5) <= HPV3) {
+				$('HPV-notes').innerHTML += "✓ (3-dose) 3rd Dose is after 5 mo. of 1st<br />";
+			}
+			else {
+				$('HPV-notes').innerHTML += "X (3-dose) 3rd Dose is before 5 mo. of 1st<br />";
+				HPVpass = false;
+			}
+		}
+		
+		if(HPVpass)
+			$('HPV-passfail').classList.add("pass");
+		else
+			$('HPV-passfail').classList.add("fail");
+			
+		//----------------------
+		// MCV
+		//----------------------
+		var MCV1 = parseDate($('MCV1').value);
+		
+		var MCVpass = true;
+		
+		$('MCV-notes').innerHTML = "";
+		$('MCV-passfail').classList.remove("pass");
+		$('MCV-passfail').classList.remove("fail");
+		
+		// MCV1 Not before age 10
+		if(addMonths(DOB,120) <= MCV1 && addMonths(DOB,192) > MCV1) {
+			$('MCV-notes').innerHTML += "✓ 1st Dose is after age 10, before 16<br />";
+		}
+		else {
+			$('MCV-notes').innerHTML += "X 1st Dose is before age 10 or age 16 and older<br />";
+			MCVpass = false;
+		}
+		
+		//If student is 16 or older, must have Dose after 16
+		if(addMonths(DOB,192) < new Date())
+		{
+			if(addMonths(DOB,192) <= MCV1) {
+				$('MCV-notes').innerHTML += "✓ (16+) 1st Dose is after age 16<br />[Ensure any previous doses are 8+ wks prior.]<br />";
+			}
+			else {
+				$('MCV-notes').innerHTML += "X (16+) 1st Dose is before age 16<br />";
+				MCVpass = false;
+			}
+		
+		}
+		
+		if(MCVpass)
+			$('MCV-passfail').classList.add("pass");
+		else
+			$('MCV-passfail').classList.add("fail");
+			
+		
+		//----------------------
+		// MMR
+		//----------------------
+		var MMR1 = parseDate($('MMR1').value);
+		var MMR2 = parseDate($('MMR2').value);
+		
+		var MMRpass = true;
+		
+		$('MMR-notes').innerHTML = "";
+		$('MMR-passfail').classList.remove("pass");
+		$('MMR-passfail').classList.remove("fail");
+		
+		// MMR1 Not before age 12 months
+		if(addMonths(DOB,12) <= MMR1) {
+			$('MMR-notes').innerHTML += "✓ 1st Dose is after 12 mo.<br />";
+		}
+		else {
+			$('MMR-notes').innerHTML += "X 1st Dose is before 12 mo.<br />";
+			MMRpass = false;
+		}
+		
+		// MMR2 4 weeks after dose 1
+		if(weeksBetween(MMR1,MMR2) >= 4) {
+			$('MMR-notes').innerHTML += "✓ 2nd Dose is after 4 wk. of first<br />";
+		}
+		else {
+			$('MMR-notes').innerHTML += "X 2nd Dose is before 4 wk. of first<br />";
+			MMRpass = false;
+		}
+		
+		if(MMRpass)
+			$('MMR-passfail').classList.add("pass");
+		else
+			$('MMR-passfail').classList.add("fail");
+			
+		
+		//----------------------
+		// HEP A
+		//----------------------
+		var HepA1 = parseDate($('HepA1').value);
+		var HepA2 = parseDate($('HepA2').value);
+		
+		var HepApass = true;
+		
+		$('HepA-notes').innerHTML = "";
+		$('HepA-passfail').classList.remove("pass");
+		$('HepA-passfail').classList.remove("fail");
+		
+		// HepA1 Not before age 12 months
+		if(addMonths(DOB,12) <= HepA1) {
+			$('HepA-notes').innerHTML += "✓ 1st Dose is after 12 mo.<br />";
+		}
+		else {
+			$('HepA-notes').innerHTML += "X 1st Dose is before 12 mo.<br />";
+			HepApass = false;
+		}
+		
+		// HepA2 6 months after dose 1
+		if(addMonths(HepA1,6) <= HepA2) {
+			$('HepA-notes').innerHTML += "✓ 2nd Dose is after 6 mo. of first<br />";
+		}
+		else {
+			$('HepA-notes').innerHTML += "X 2nd Dose is before 6 mo. of first<br />";
+			HepApass = false;
+		}
+		
+		if(HepApass)
+			$('HepA-passfail').classList.add("pass");
+		else
+			$('HepA-passfail').classList.add("fail");
+			
+		
+		//----------------------
+		// HEP B
+		//----------------------
+		var HepB1 = parseDate($('HepB1').value);
+		var HepB2 = parseDate($('HepB2').value);
+		var HepB3 = parseDate($('HepB3').value);
+		
+		var HepBpass = true;
+		
+		$('HepB-notes').innerHTML = "";
+		$('HepB-passfail').classList.remove("pass");
+		$('HepB-passfail').classList.remove("fail");
+		
+		// HepB1 Not before birth
+		if(DOB <= HepB1) {
+			$('HepB-notes').innerHTML += "✓ 1st Dose is after birth<br />";
+		}
+		else {
+			$('HepB-notes').innerHTML += "X 1st Dose is before birth<br />";
+			HepBpass = false;
+		}
+		
+		// HepB2 4 weeks after dose 1
+		if(weeksBetween(HepB1,HepB2) >= 4) {
+			$('HepB-notes').innerHTML += "✓ 2nd Dose is after 4 wk. of 1st<br />";
+		}
+		else {
+			$('HepB-notes').innerHTML += "X 2nd Dose is before 4 wk. of 1st<br />";
+			HepBpass = false;
+		}
+		
+		// HepB3 8 weeks after 2nd dose 
+		if(weeksBetween(HepB2,HepB3) >= 8) {
+			$('HepB-notes').innerHTML += "✓ 3rd Dose is after 8 wk. of 2nd<br />";
+		}
+		else {
+			$('HepB-notes').innerHTML += "X 3rd Dose is before 8 wk. of 2nd<br />";
+			HepBpass = false;
+		}
+		
+		// HepB3 Also 16 weeks after 1st dose 
+		if(weeksBetween(HepB1,HepB3) >= 16) {
+			$('HepB-notes').innerHTML += "✓ 3rd Dose is after 16 wk. of 1st<br />";
+		}
+		else {
+			$('HepB-notes').innerHTML += "X 3rd Dose is before 16 wk. of 1st<br />";
+			HepBpass = false;
+		}
+		
+		// HepB3 Also not before age 24 weeks
+		if(weeksBetween(DOB,HepB3) >= 24) {
+			$('HepB-notes').innerHTML += "✓ 3rd Dose is after age 24 weeks<br />";
+		}
+		else {
+			$('HepB-notes').innerHTML += "X 3rd Dose is before age 24 weeks<br />";
+			HepBpass = false;
+		}
+		
+		if(HepBpass)
+			$('HepB-passfail').classList.add("pass");
+		else
+			$('HepB-passfail').classList.add("fail");
+		
+		
+		//----------------------
+		// Polio
+		//----------------------
+		var Polio1 = parseDate($('Polio1').value);
+		var Polio2 = parseDate($('Polio2').value);
+		var Polio3 = parseDate($('Polio3').value);
+		var Polio4 = parseDate($('Polio4').value);
+		
+		var Poliopass = true;
+		
+		$('Polio-notes').innerHTML = "";
+		$('Polio-passfail').classList.remove("pass");
+		$('Polio-passfail').classList.remove("fail");
+		
+		// Polio1 Not before 6 wks
+		if(weeksBetween(DOB,Polio1) >= 6) {
+			$('Polio-notes').innerHTML += "✓ 1st Dose is after 6 wks<br />";
+		}
+		else {
+			$('Polio-notes').innerHTML += "X 1st Dose is before 6 wks<br />";
+			Poliopass = false;
+		}
+		
+		// Polio2 4 weeks after dose 1
+		if(weeksBetween(Polio1,Polio2) >= 4) {
+			$('Polio-notes').innerHTML += "✓ 2nd Dose is after 4 wk. of 1st<br />";
+		}
+		else {
+			$('Polio-notes').innerHTML += "X 2nd Dose is before 4 wk. of 1st<br />";
+			Poliopass = false;
+		}
+		
+		// Polio3 4 weeks after 2nd dose 
+		if(weeksBetween(Polio2,Polio3) >= 4) {
+			$('Polio-notes').innerHTML += "✓ 3rd Dose is after 4 wk. of 2nd<br />";
+		}
+		else {
+			$('Polio-notes').innerHTML += "X 3rd Dose is before 4 wk. of 2nd<br />";
+			Poliopass = false;
+		}
+		
+		
+		//Kinrix can take the place of the 4th Polio dose
+		//Quadracel can take the place of the 4th (or 5th) Polio dose. We don't require 5 doses.
+		if(Kinrixpass)
+		{
+			$('Polio-notes').innerHTML += "✓ Kinrix (DTaP-IPV) as 4th Dose <br />";
+		}
+		else if(Quadracelpass)
+		{
+			$('Polio-notes').innerHTML += "✓ Quadracel (DTaP-IPV) as 4th Dose <br />";
+		}
+		else
+		{
+			// We can skip the 4th polio dose if 3rd dose was given past age 4 AND 6 mo after dose 2
+			if(!(addMonths(DOB,48) <= Polio3 && addMonths(Polio2,6) <= Polio3))
+			{
+				// Polio4 8 weeks after 3rd dose 
+				if(addMonths(Polio3,6) <= Polio4) {
+					$('Polio-notes').innerHTML += "✓ 4th Dose is after 6 mo. of 3rd<br />";
+				}
+				else {
+					$('Polio-notes').innerHTML += "X 4th Dose is before 6 mo. of 3rd<br />";
+					Poliopass = false;
+				}
+				
+				// Polio4 Also not before age 4
+				if(addMonths(DOB,48) < Polio4) {
+					$('Polio-notes').innerHTML += "✓ 4th Dose is after age 4 <br />";
+				}
+				else {
+					$('Polio-notes').innerHTML += "X 4th Dose is before age 4 <br />";
+					Poliopass = false;
+				}
+			}
+		}
+		if(Poliopass)
+			$('Polio-passfail').classList.add("pass");
+		else
+			$('Polio-passfail').classList.add("fail");
+		
+		
+		//----------------------
+		// Varicella
+		//----------------------
+		var Varicella1 = parseDate($('Varicella1').value);
+		var Varicella2 = parseDate($('Varicella2').value);
+		
+		var Varicellapass = true;
+		
+		$('Varicella-notes').innerHTML = "";
+		$('Varicella-passfail').classList.remove("pass");
+		$('Varicella-passfail').classList.remove("fail");
+		
+		// Varicella1 Not before 12 mo.
+		if(addMonths(DOB,12) <= Varicella1) {
+			$('Varicella-notes').innerHTML += "✓ 1st Dose is after 12 mo.<br />";
+		}
+		else {
+			$('Varicella-notes').innerHTML += "X 1st Dose is before 12 mo.<br />";
+			Varicellapass = false;
+		}
+		
+		
+		//If student is 12 mo to 12 yrs
+		if(addMonths(DOB,12) <= new Date() && addMonths(DOB,144) >= new Date())
+		{
+			if(weeksBetween(Varicella1,Varicella2) >= 12) {
+				$('Varicella-notes').innerHTML += "✓ (1-12 yr) 2nd Dose is after 12 wk of 1st<br />";
+			}
+			else {
+				$('Varicella-notes').innerHTML += "X (1-12 yr) 2nd Dose is before 12 wk of 1st<br />";
+				Varicellapass = false;
+			}
+		
+		}
+		//If student is 13+ yrs
+		else if(addMonths(DOB,13) <= new Date())
+		{
+			if(weeksBetween(Varicella1,Varicella2) >= 4) {
+				$('Varicella-notes').innerHTML += "✓ (13+ yr) 2nd Dose is after 4 wk of 1st<br />";
+			}
+			else {
+				$('Varicella-notes').innerHTML += "X (13+ yr) 2nd Dose is before 4 wk of 1st<br />";
+				Varicellapass = false;
+			}
+		
+		}
+		
+		if(Varicellapass)
+			$('Varicella-passfail').classList.add("pass");
+		else
+			$('Varicella-passfail').classList.add("fail");
+			
+			
+		//----------------------
+		// DTaP
+		//----------------------
+		var DTaP1 = parseDate($('DTaP1').value);
+		var DTaP2 = parseDate($('DTaP2').value);
+		var DTaP3 = parseDate($('DTaP3').value);
+		var DTaP4 = parseDate($('DTaP4').value);
+		var DTaP5 = parseDate($('DTaP5').value);
+		
+		var DTaPpass = true;
+		
+		$('DTaP-notes').innerHTML = "";
+		$('DTaP-passfail').classList.remove("pass");
+		$('DTaP-passfail').classList.remove("fail");
+		
+		// DTaP1 Not before 6 wk old
+		if(weeksBetween(DOB,DTaP1) >=6) {
+			$('DTaP-notes').innerHTML += "✓ 1st Dose is after 6 wk.<br />";
+		}
+		else {
+			$('DTaP-notes').innerHTML += "X 1st Dose is before 6 wk.<br />";
+			DTaPpass = false;
+		}
+		
+		// DTaP2 4 weeks after dose 1
+		if(weeksBetween(DTaP1,DTaP2) >= 4) {
+			$('DTaP-notes').innerHTML += "✓ 2nd Dose is after 4 wk. of 1st<br />";
+		}
+		else {
+			$('DTaP-notes').innerHTML += "X 2nd Dose is before 4 wk. of 1st<br />";
+			DTaPpass = false;
+		}
+		
+		// DTaP3 4 weeks after 2nd dose 
+		if(weeksBetween(DTaP2,DTaP3) >= 4) {
+			$('DTaP-notes').innerHTML += "✓ 3rd Dose is after 4 wk. of 2nd<br />";
+		}
+		else {
+			$('DTaP-notes').innerHTML += "X 3rd Dose is before 4 wk. of 2nd<br />";
+			DTaPpass = false;
+		}
+		
+		// DTaP4 6 mo. after 3rd dose 
+		if(addMonths(DTaP3,6) <= DTaP4) {
+			$('DTaP-notes').innerHTML += "✓ 4th Dose is after 6 mo. of 3rd<br />";
+		}
+		else {
+			$('DTaP-notes').innerHTML += "X 4th Dose is before 6 mo. of 3rd<br />";
+			DTaPpass = false;
+		}
+		
+		// DTaP4 Also not before age 12 mo.
+		if(addMonths(DOB,12) <= DTaP4) {
+			$('DTaP-notes').innerHTML += "✓ 4th Dose is after age 12 mo.<br />";
+		}
+		else {
+			$('DTaP-notes').innerHTML += "X 4th Dose is before age 12 mo.<br />";
+			DTaPpass = false;
+		}
+		
+		//Kinrix or Quadracel can take the place of the 5th DTaP dose
+		if(Kinrixpass)
+		{
+			$('DTaP-notes').innerHTML += "✓ Kinrix (DTaP-IPV) as 5th Dose <br />";
+		}
+		else if(Quadracelpass)
+		{
+			$('DTaP-notes').innerHTML += "✓ Quadracel (DTaP-IPV) as 5th Dose <br />";
+		}
+		else
+		{
+			// DTaP5 can be skipped if DTaP4 was given at age 4+ AND 6 mo after DTaP3
+			if(!(addMonths(DOB,48) <= DTaP4 && addMonths(DTaP3,6) <= DTaP4)) {
+				// DTaP5 6 mo. after 4th dose 
+				if(addMonths(DTaP4,6) <= DTaP5) {
+					$('DTaP-notes').innerHTML += "✓ 5th Dose is after 6 mo. of 4th<br />";
+				}
+				else {
+					$('DTaP-notes').innerHTML += "X 5th Dose is before 6 mo. of 4th<br />";
+					DTaPpass = false;
+				}
+				
+				// DTaP5 Not before age 4 yr.
+				if(addMonths(DOB,48) <= DTaP5) {
+					$('DTaP-notes').innerHTML += "✓ 5th Dose is after age 4 yr.<br />";
+				}
+				else {
+					$('DTaP-notes').innerHTML += "X 5th Dose is before age 4 yr.<br />";
+					DTaPpass = false;
+				}
+			}
+		}
+		if(DTaPpass)
+			$('DTaP-passfail').classList.add("pass");
+		else
+			$('DTaP-passfail').classList.add("fail");
+			
+			
+		//----------------------
+		// Tdap (Check after DTaP, may override)
+		//----------------------
+		var Tdap1 = parseDate($('Tdap1').value);
+		var Tdap2 = parseDate($('Tdap2').value);
+		var Tdap3 = parseDate($('Tdap3').value);
+		
+		var Tdappass = true;
+		
+		$('Tdap-notes').innerHTML = "";
+		$('Tdap-passfail').classList.remove("pass");
+		$('Tdap-passfail').classList.remove("fail");
+		
+		// Tdap1 Also not before age 10.
+		if(addMonths(DOB,120) <= Tdap1) {
+			$('Tdap-notes').innerHTML += "✓ 1st Dose is after age 10.<br />";
+		}
+		else {
+			$('Tdap-notes').innerHTML += "X 1st Dose is before age 10.<br />";
+			Tdappass = false;
+		}
+		
+		if(!DTaPpass)
+		{
+			// 3-course override is 1st at 7yr+, then a does after 4 weeks, then another after 6 months
+			if(addMonths(DOB,84) <= Tdap1 && weeksBetween(Tdap1,Tdap2) >= 4 && addMonths(Tdap2,6) < Tdap3) {
+				$('DTaP-notes').innerHTML += "✓ 3-Dose Tdap override<br />";
+				DTaPpass = true;
+				$('DTaP-passfail').classList.remove("fail");
+				$('DTaP-passfail').classList.add("pass");
+			}
+		}
+		
+		if(Tdappass)
+			$('Tdap-passfail').classList.add("pass");
+		else
+			$('Tdap-passfail').classList.add("fail");
+			
+			
+		
+		//----------------------
+		// Twinrix (HEP A-HEP B)
+		//----------------------
+		var Twinrix1 = parseDate($('Twinrix1').value);
+		var Twinrix2 = parseDate($('Twinrix2').value);
+		var Twinrix3 = parseDate($('Twinrix3').value);
+		
+		var Twinrixpass = true;
+		
+		$('Twinrix-notes').innerHTML = "";
+		$('Twinrix-passfail').classList.remove("pass");
+		$('Twinrix-passfail').classList.remove("fail");
+		
+		// Twinrix1 Not before age 18
+		if(addMonths(DOB,216) <= Twinrix1) {
+			$('Twinrix-notes').innerHTML += "✓ 1st Dose is after age 18<br />";
+		}
+		else {
+			$('Twinrix-notes').innerHTML += "X 1st Dose is before age 18<br />";
+			Twinrixpass = false;
+		}
+		
+		// Twinrix2 1 months after dose 1
+		if(addMonths(Twinrix1,1) <= Twinrix2) {
+			$('Twinrix-notes').innerHTML += "✓ 2nd Dose is after 1 mo. of first<br />";
+		}
+		else {
+			$('Twinrix-notes').innerHTML += "X 2nd Dose is before 1 mo. of first<br />";
+			Twinrixpass = false;
+		}
+		
+		// Twinrix3 5 months after dose 1
+		if(addMonths(Twinrix1,6) <= Twinrix3) {
+			$('Twinrix-notes').innerHTML += "✓ 3rd Dose is after 6 mo. of first<br />";
+		}
+		else {
+			$('Twinrix-notes').innerHTML += "X 3rd Dose is before 6 mo. of first<br />";
+			Twinrixpass = false;
+		}
+		
+		if(!HepApass)
+		{
+			// 3-course override
+			if(Twinrixpass) {
+				$('HepA-notes').innerHTML += "✓ 3-Dose Twinrix override<br />";
+				HepApass = true;
+				$('HepA-passfail').classList.remove("fail");
+				$('HepA-passfail').classList.add("pass");
+			}
+		}
+		if(!HepBpass)
+		{
+			// 3-course override
+			if(Twinrixpass) {
+				$('HepB-notes').innerHTML += "✓ 3-Dose Twinrix override<br />";
+				HepBpass = true;
+				$('HepB-passfail').classList.remove("fail");
+				$('HepB-passfail').classList.add("pass");
+			}
+		}
+		
+		if(Twinrixpass)
+			$('Twinrix-passfail').classList.add("pass");
+		else
+			$('Twinrix-passfail').classList.add("fail");
+			
+		
+		//----------------------
+		// Pediarix (DTaP-HepB-IPV)
+		//----------------------
+		var Pediarix1 = parseDate($('Pediarix1').value);
+		var Pediarix2 = parseDate($('Pediarix2').value);
+		var Pediarix3 = parseDate($('Pediarix3').value);
+		
+		var Pediarixpass = true;
+		
+		$('Pediarix-notes').innerHTML = "";
+		$('Pediarix-passfail').classList.remove("pass");
+		$('Pediarix-passfail').classList.remove("fail");
+		
+		// Pediarix1 Not before age 6 wk.
+		if(weeksBetween(DOB,Pediarix1) >= 6) {
+			$('Pediarix-notes').innerHTML += "✓ 1st Dose is after age 6 wk<br />";
+		}
+		else {
+			$('Pediarix-notes').innerHTML += "X 1st Dose is before age 6 wk<br />";
+			Pediarixpass = false;
+		}
+		
+		// Pediarix2 2 months after dose 1
+		if(addMonths(Pediarix1,2) <= Pediarix2) {
+			$('Pediarix-notes').innerHTML += "✓ 2nd Dose is after 2 mo. of first<br />";
+		}
+		else {
+			$('Pediarix-notes').innerHTML += "X 2nd Dose is before 2 mo. of first<br />";
+			Pediarixpass = false;
+		}
+		
+		
+		// Pediarix3 4 months after dose 1
+		if(addMonths(Pediarix1,4) <= Pediarix3) {
+			$('Pediarix-notes').innerHTML += "✓ 3rd Dose is after 4 mo. of first<br />";
+		}
+		else {
+			$('Pediarix-notes').innerHTML += "X 3rd Dose is before 4 mo. of first<br />";
+			Pediarixpass = false;
+		}
+		
+		if(!DTaPpass)
+		{
+			// 3-course override
+			if(Pediarixpass) {
+				$('DTaP-notes').innerHTML += "✓ 3-Dose Pediarix override<br />";
+				DTaPpass = true;
+				$('DTaP-passfail').classList.remove("fail");
+				$('DTaP-passfail').classList.add("pass");
+			}
+		}
+		if(!HepBpass)
+		{
+			// 3-course override
+			if(Pediarixpass) {
+				$('HepB-notes').innerHTML += "✓ 3-Dose Pediarix override<br />";
+				HepBpass = true;
+				$('HepB-passfail').classList.remove("fail");
+				$('HepB-passfail').classList.add("pass");
+			}
+		}
+		if(!Poliopass)
+		{
+			// 3-course override
+			if(Pediarixpass) {
+				$('Polio-notes').innerHTML += "✓ 3-Dose Pediarix override<br />";
+				Poliopass = true;
+				$('Polio-passfail').classList.remove("fail");
+				$('Polio-passfail').classList.add("pass");
+			}
+		}
+		
+		if(Pediarixpass)
+			$('Pediarix-passfail').classList.add("pass");
+		else
+			$('Pediarix-passfail').classList.add("fail");
+			
+		//----------------------
+		// ProQuad (MMR-Varicella)
+		//----------------------
+		var ProQuad1 = parseDate($('ProQuad1').value);
+		var ProQuad2 = parseDate($('ProQuad2').value);
+		
+		var ProQuadpass = true;
+		
+		$('ProQuad-notes').innerHTML = "";
+		$('ProQuad-passfail').classList.remove("pass");
+		$('ProQuad-passfail').classList.remove("fail");
+		
+		// ProQuad1 Not before age 12 mo.
+		if(addMonths(DOB,12) <= ProQuad1) {
+			$('ProQuad-notes').innerHTML += "✓ 1st Dose is after age 12 mo.<br />";
+		}
+		else {
+			$('ProQuad-notes').innerHTML += "X 1st Dose is before age 12 mo.<br />";
+			ProQuadpass = false;
+		}
+		
+		// ProQuad2 between age 4-6
+		if(addMonths(DOB,48) <= ProQuad2) {
+			$('ProQuad-notes').innerHTML += "✓ 2nd Dose is after age 4<br />";
+		}
+		else {
+			$('ProQuad-notes').innerHTML += "X 2nd Dose is before age 4<br />";
+			ProQuadpass = false;
+		}
+		
+		if(!MMRpass)
+		{
+			// 3-course override
+			if(ProQuadpass) {
+				$('MMR-notes').innerHTML += "✓ 3-Dose ProQuad override<br />";
+				MMRpass = true;
+				$('MMR-passfail').classList.remove("fail");
+				$('MMR-passfail').classList.add("pass");
+			}
+		}
+		if(!Varicellapass)
+		{
+			// 3-course override
+			if(ProQuadpass) {
+				$('Varicella-notes').innerHTML += "✓ 3-Dose ProQuad override<br />";
+				Varicellapass = true;
+				$('Varicella-passfail').classList.remove("fail");
+				$('Varicella-passfail').classList.add("pass");
+			}
+		}
+		
+		if(ProQuadpass)
+			$('ProQuad-passfail').classList.add("pass");
+		else
+			$('ProQuad-passfail').classList.add("fail");
+			
+
+		//----------------------
+		// Pentacel (DTap-IPV/Hib)
+		//----------------------
+		var Pentacel1 = parseDate($('Pentacel1').value);
+		var Pentacel2 = parseDate($('Pentacel2').value);
+		var Pentacel3 = parseDate($('Pentacel3').value);
+		var Pentacel4 = parseDate($('Pentacel4').value);
+		
+		var Pentacelpass = true;
+		
+		$('Pentacel-notes').innerHTML = "";
+		$('Pentacel-passfail').classList.remove("pass");
+		$('Pentacel-passfail').classList.remove("fail");
+		
+		// Pentacel1 Not before age 6 wk.
+		if(weeksBetween(DOB,Pentacel1) >= 6) {
+			$('Pentacel-notes').innerHTML += "✓ 1st Dose is after age 6 wk.<br />";
+		}
+		else {
+			$('Pentacel-notes').innerHTML += "X 1st Dose is before age 6 wk.<br />";
+			Pentacelpass = false;
+		}
+		
+		// Pentacel2 2 mo after dose 1
+		if(addMonths(Pentacel1,2) <= Pentacel2) {
+			$('Pentacel-notes').innerHTML += "✓ 2nd Dose is 2 mo. after first dose<br />";
+		}
+		else {
+			$('Pentacel-notes').innerHTML += "X 2nd Dose is 2 mo. after first dose<br />";
+			Pentacelpass = false;
+		}
+		
+		// Pentacel3 2 mo after dose 2
+		if(addMonths(Pentacel2,2) <= Pentacel3) {
+			$('Pentacel-notes').innerHTML += "✓ 3rd Dose is 2 mo. after 2nd dose<br />";
+		}
+		else {
+			$('Pentacel-notes').innerHTML += "X 3rd Dose is 2 mo. after 2nd dose<br />";
+			Pentacelpass = false;
+		}
+		
+		// Pentacel4 6 mo after dose 3
+		if(addMonths(Pentacel3,6) <= Pentacel4) {
+			$('Pentacel-notes').innerHTML += "✓ 4th Dose is 6 mo. after 3rd dose<br />";
+		}
+		else {
+			$('Pentacel-notes').innerHTML += "X 4th Dose is 6 mo. after 3rd dose<br />";
+			Pentacelpass = false;
+		}
+		
+		if(!DTaPpass)
+		{
+			// 3-course override
+			if(Pentacelpass) {
+				$('DTaP-notes').innerHTML += "✓ 4-Dose Pentacel override<br />";
+				DTaPpass = true;
+				$('DTaP-passfail').classList.remove("fail");
+				$('DTaP-passfail').classList.add("pass");
+			}
+		}
+		if(!Poliopass)
+		{
+			// 3-course override
+			if(Pentacelpass) {
+				$('Polio-notes').innerHTML += "✓ 4-Dose Pentacel override<br />";
+				Poliopass = true;
+				$('Polio-passfail').classList.remove("fail");
+				$('Polio-passfail').classList.add("pass");
+			}
+		}
+		
+		if(Pentacelpass)
+			$('Pentacel-passfail').classList.add("pass");
+		else
+			$('Pentacel-passfail').classList.add("fail");
+			
+
+		//----------------------
+		// MenHibrix (Hib-MenCY)
+		//----------------------
+		var MenHibrix1 = parseDate($('MenHibrix1').value);
+		var MenHibrix2 = parseDate($('MenHibrix2').value);
+		var MenHibrix3 = parseDate($('MenHibrix3').value);
+		var MenHibrix4 = parseDate($('MenHibrix4').value);
+		
+		var MenHibrixpass = true;
+		
+		$('MenHibrix-notes').innerHTML = "";
+		$('MenHibrix-passfail').classList.remove("pass");
+		$('MenHibrix-passfail').classList.remove("fail");
+		
+		// MenHibrix1 Not before age 6 wk.
+		if(weeksBetween(DOB,MenHibrix1) >= 6) {
+			$('MenHibrix-notes').innerHTML += "✓ 1st Dose is after age 6 wk.<br />";
+		}
+		else {
+			$('MenHibrix-notes').innerHTML += "X 1st Dose is before age 6 wk.<br />";
+			MenHibrixpass = false;
+		}
+		
+		// MenHibrix2 2 mo after dose 1
+		if(addMonths(MenHibrix1,2) <= MenHibrix2) {
+			$('MenHibrix-notes').innerHTML += "✓ 2nd Dose is 2 mo. after first dose<br />";
+		}
+		else {
+			$('MenHibrix-notes').innerHTML += "X 2nd Dose is 2 mo. after first dose<br />";
+			MenHibrixpass = false;
+		}
+		
+		// MenHibrix3 2 mo after dose 2
+		if(addMonths(MenHibrix2,2) <= MenHibrix3) {
+			$('MenHibrix-notes').innerHTML += "✓ 3rd Dose is 2 mo. after 2nd dose<br />";
+		}
+		else {
+			$('MenHibrix-notes').innerHTML += "X 3rd Dose is 2 mo. after 2nd dose<br />";
+			MenHibrixpass = false;
+		}
+		
+		// MenHibrix4 6 mo after dose 3
+		if(addMonths(MenHibrix3,6) <= MenHibrix4) {
+			$('MenHibrix-notes').innerHTML += "✓ 4th Dose is 6 mo. after 3rd dose<br />";
+		}
+		else {
+			$('MenHibrix-notes').innerHTML += "X 4th Dose is 6 mo. after 3rd dose<br />";
+			MenHibrixpass = false;
+		}
+		
+		if(!MCVpass)
+		{
+			// 3-course override
+			if(MenHibrixpass) {
+				$('MCV-notes').innerHTML += "✓ 4-Dose MenHibrix override<br />";
+				MCVpass = true;
+				$('MCV-passfail').classList.remove("fail");
+				$('MCV-passfail').classList.add("pass");
+			}
+		}
+		//Also passes HiB but we're not tracking it
+		
+		if(MenHibrixpass)
+			$('MenHibrix-passfail').classList.add("pass");
+		else
+			$('MenHibrix-passfail').classList.add("fail");
+		
+		
+		
+		//Run the date math helper
+		var dateCompare1 = parseDate($('dateCompare1').value);
+		var dateCompare2 = parseDate($('dateCompare2').value);
+		if(dateCompare1 != "Invalid Date" && dateCompare2 != "Invalid Date")
+		{
+			var dateMathOutput = $('dateMathOutput');
+			
+			var weeksApart = weeksBetween(dateCompare1,dateCompare2);
+			dateMathOutput.innerHTML = "Dates are <strong>" + weeksApart.toFixed(2) + " weeks</strong> apart";
+			
+			if(weeksApart >= 104)
+				dateMathOutput.innerHTML += " (or <strong>" + (weeksApart/52).toFixed(2) + " years</strong>)";
+		}
+	}
+	
+	
+			
+	
+	var textInputs = document.querySelectorAll('input[type="text"]');
+    var textInputsArray = Array.from(textInputs);
+    textInputsArray.forEach(function(input) {
+      input.oninput = Check;
+	  input.classList.add("pass");
+    });
+	Check();
+	</script>
+</div>
+</body>
+</html>
